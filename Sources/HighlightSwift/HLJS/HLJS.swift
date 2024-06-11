@@ -24,17 +24,22 @@ final actor HLJS {
     }
     
     func highlight(_ text: String, mode: HighlightMode) throws -> HLJSResult {
-        switch mode {
-        case .automatic:
-            return try highlightAuto(text)
-        case .languageAlias(let alias):
-            return try highlight(text, language: alias, ignoreIllegals: false)
-        case .languageAliasIgnoreIllegal(let alias):
-            return try highlight(text, language: alias, ignoreIllegals: true)
-        case .language(let language):
-            return try highlight(text, language: language.alias, ignoreIllegals: false)
-        case .languageIgnoreIllegal(let language):
-            return try highlight(text, language: language.alias, ignoreIllegals: true)
+     do {
+            switch mode {
+            case .automatic:
+                return try highlightAuto(text)
+            case .languageAlias(let alias):
+                return try highlight(text, language: alias, ignoreIllegals: false)
+            case .languageAliasIgnoreIllegal(let alias):
+                return try highlight(text, language: alias, ignoreIllegals: true)
+            case .language(let language):
+                return try highlight(text, language: language.alias, ignoreIllegals: false)
+            case .languageIgnoreIllegal(let language):
+                return try highlight(text, language: language.alias, ignoreIllegals: true)
+            }
+        } catch {
+            // Return the text unmodified if there's an error
+            return HLJSResult(value: text, illegal: false, language: "plaintext", relevance: 0)
         }
     }
     
