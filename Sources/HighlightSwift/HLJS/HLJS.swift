@@ -32,12 +32,12 @@ final actor HLJS {
         for segment in segments {
             do {
                 let result = try highlightSegment(segment, mode: mode)
-                finalText += result.value + ". "
+                finalText += result.value + "\n "
                 totalRelevance += Int(result.relevance)
                 isIllegal = isIllegal || result.illegal
             } catch {
                 // Append unmodified segment if error occurs
-                finalText += segment + ". "
+                finalText += segment + "\n"
             }
         }
         
