@@ -53,7 +53,7 @@ public struct CodeText {
             result = highlightResult
         } catch {
             logger.log(level: .error, "\(error.localizedDescription)")
-            result = highlightResult
+            result = AttributedString(stringLiteral: text)
         }
     }
 }
