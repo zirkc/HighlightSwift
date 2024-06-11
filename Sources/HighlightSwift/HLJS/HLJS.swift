@@ -41,7 +41,7 @@ final actor HLJS {
             }
         }
         
-        return HLJSResult(value: finalText, illegal: isIllegal, language: "mixed", relevance: Int(totalRelevance))
+        return HLJSResult(value: finalText, illegal: isIllegal, language: "mixed", relevance: Int32(totalRelevance))
     }
     
     private func highlightSegment(_ text: String, mode: HighlightMode) throws -> HLJSResult {
