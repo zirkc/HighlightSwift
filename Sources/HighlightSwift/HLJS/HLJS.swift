@@ -24,7 +24,7 @@ final actor HLJS {
     }
     
     func highlight(_ text: String, mode: HighlightMode) -> HLJSResult {
-        let segments = text.components(separatedBy: ". ")  // Simple segmentation by sentence
+        let segments = text.components(separatedBy: "\n")  // Simple segmentation by sentence
         var finalText = ""
         var totalRelevance = 0
         var isIllegal = false
