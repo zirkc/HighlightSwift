@@ -23,9 +23,29 @@ final actor HLJS {
         return hljs
     }
     
-    func highlight(_ text: String, mode: HighlightMode) throws -> HLJSResult {
-     do {
-            switch mode {
+    func highlight(_ text: String, mode: HighlightMode) -> HLJSResult {
+        let segments = text.components(separatedBy: ". ")  // Simple segmentation by sentence
+        var finalText = ""
+        var totalRelevance = 0
+        var isIllegal = false
+        
+        for segment in segments {
+            do {
+                let result = try highlightSegment(segment, mode: mode)
+                finalText += result.value + ". "
+                totalRelevance += result.relevance
+                isIllegal = isIllegal || result.illegal
+            } catch {
+                // Append unmodified segment if error occurs
+                finalText += segment + ". "
+            }
+        }
+        
+        return HLJSResult(value: finalText, illegal: isIllegal, language: "mixed", relevance: totalRelevance)
+    }
+    
+    private func highlightSegment(_ text: String, mode: HighlightMode) throws -> HLJSResult {
+        switch mode {
             case .automatic:
                 return try highlightAuto(text)
             case .languageAlias(let alias):
@@ -36,10 +56,6 @@ final actor HLJS {
                 return try highlight(text, language: language.alias, ignoreIllegals: false)
             case .languageIgnoreIllegal(let language):
                 return try highlight(text, language: language.alias, ignoreIllegals: true)
-            }
-        } catch {
-            // Return the text unmodified if there's an error
-            return HLJSResult(value: text, illegal: false, language: "plaintext", relevance: 0)
         }
     }
     
@@ -52,12 +68,8 @@ final actor HLJS {
         return try highlightResult(jsResult)
     }
     
-    private func highlight(_ text: String,
-                           language: String,
-                           ignoreIllegals: Bool) throws -> HLJSResult {
-        var languageOptions: [String : Any] = [
-            "language": language,
-        ]
+    private func highlight(_ text: String, language: String, ignoreIllegals: Bool) throws -> HLJSResult {
+        var languageOptions: [String: Any] = ["language": language]
         if ignoreIllegals {
             languageOptions["ignoreIllegals"] = ignoreIllegals
         }
@@ -84,4 +96,3 @@ final actor HLJS {
         return HLJSResult(value: value, illegal: illegal, language: language, relevance: relevance)
     }
 }
-
