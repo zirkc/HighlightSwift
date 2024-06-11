@@ -33,7 +33,7 @@ final actor HLJS {
             do {
                 let result = try highlightSegment(segment, mode: mode)
                 finalText += result.value + ". "
-                totalRelevance += result.relevance
+                totalRelevance += Int(result.relevance)
                 isIllegal = isIllegal || result.illegal
             } catch {
                 // Append unmodified segment if error occurs
